@@ -24,21 +24,9 @@ const Home: NextPage = () => {
       {/* Content */}
       <div className={styles.container}>
         {/* Top Section */}
-        <h1 className={styles.h1}>NFT Marketplace w/ thirdweb + Next.JS</h1>
+        <h1 className={styles.h1}>NREFT first-of-a-kind Non-Collateral NFT renting marketplace</h1>
         <p className={styles.explain}>
-          Build an NFT marketplace using{" "}
-          <b>
-            {" "}
-            <a
-              href="https://thirdweb.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.purple}
-            >
-              thirdweb
-            </a>
-          </b>{" "}
-          to list your ERC721 and ERC1155 tokens for auction or for direct sale.
+          Your NFT Marketplace to rent safely without collaterals along with auction or for direct sale.
         </p>
 
         <hr className={styles.divider} />
@@ -46,7 +34,7 @@ const Home: NextPage = () => {
         <div style={{ marginTop: 32, marginBottom: 32 }}>
           <Link href="/create">
             <a className={styles.mainButton} style={{ textDecoration: "none" }}>
-              Create A Listing
+              List Collection
             </a>
           </Link>
         </div>

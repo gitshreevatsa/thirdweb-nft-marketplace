@@ -14,12 +14,7 @@ export default function Header() {
       <div className={styles.left}>
         <div>
           <Link href="/" passHref role="button">
-            <img
-              src={`/logo.png`}
-              alt="Thirdweb Logo"
-              width={135}
-              style={{ cursor: "pointer" }}
-            />
+            <h2 style={{ cursor: "pointer" }}>NREFT</h2>
           </Link>
         </div>
       </div>

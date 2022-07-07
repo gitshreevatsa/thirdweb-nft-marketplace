@@ -4,15 +4,16 @@ import {
   useNetworkMismatch,
 } from "@thirdweb-dev/react";
 import { NATIVE_TOKEN_ADDRESS, TransactionResult } from "@thirdweb-dev/sdk";
-import type { NextPage } from "next";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import styles from "../styles/Home.module.css";
 
-const Create: NextPage = () => {
+const Create = () => {
   // Next JS Router hook to redirect to other pages
   const router = useRouter();
   const networkMismatch = useNetworkMismatch();
   const [, switchNetwork] = useNetwork();
+  const [rentListing, setRentListing] = useState(false);
 
   // Connect to our marketplace contract via the useMarketplace hook
   const marketplace = useMarketplace(
@@ -20,7 +21,7 @@ const Create: NextPage = () => {
   );
 
   // This function gets called when the form is submitted.
-  async function handleCreateListing(e: any) {
+  async function handleCreateListing(e) {
     try {
       // Ensure user is on the correct network
       if (networkMismatch) {
@@ -32,7 +33,7 @@ const Create: NextPage = () => {
       e.preventDefault();
 
       // Store the result of either the direct listing creation or the auction listing creation
-      let transactionResult: undefined | TransactionResult = undefined;
+      let transactionResult = undefined;
 
       // De-construct data from form submission
       const { listingType, contractAddress, tokenId, price } =
@@ -66,11 +67,7 @@ const Create: NextPage = () => {
     }
   }
 
-  async function createAuctionListing(
-    contractAddress: string,
-    tokenId: string,
-    price: string
-  ) {
+  async function createAuctionListing(contractAddress, tokenId, price) {
     try {
       const transaction = await marketplace?.auction.createListing({
         assetContractAddress: contractAddress, // Contract Address of the NFT
@@ -89,11 +86,7 @@ const Create: NextPage = () => {
     }
   }
 
-  async function createDirectListing(
-    contractAddress: string,
-    tokenId: string,
-    price: string
-  ) {
+  async function createDirectListing(contractAddress, tokenId, price) {
     try {
       const transaction = await marketplace?.direct.createListing({
         assetContractAddress: contractAddress, // Contract Address of the NFT
@@ -129,19 +122,39 @@ const Create: NextPage = () => {
               value="directListing"
               defaultChecked
               className={styles.listingType}
+              onClick={() => {
+                setRentListing(false);
+              }}
             />
             <label htmlFor="directListing" className={styles.listingTypeLabel}>
               Direct Listing
             </label>
+
             <input
               type="radio"
               name="listingType"
               id="auctionListing"
               value="auctionListing"
               className={styles.listingType}
+              onClick={() => {
+                setRentListing(false);
+              }}
             />
             <label htmlFor="auctionListing" className={styles.listingTypeLabel}>
               Auction Listing
+            </label>
+            <input
+              type="radio"
+              name="listingType"
+              id="rentListing"
+              value="rentListing"
+              className={styles.listingType}
+              onClick={() => {
+                setRentListing(true);
+              }}
+            />
+            <label htmlFor="rentListing" className={styles.listingTypeLabel}>
+              Rent{" "}
             </label>
           </div>
 
@@ -162,13 +175,25 @@ const Create: NextPage = () => {
           />
 
           {/* Sale Price For Listing Field */}
+          {!rentListing &&
           <input
             type="text"
             name="price"
             className={styles.textInput}
             placeholder="Sale Price"
           />
+}
 
+          {/*Renting price*/}
+
+          {rentListing && (
+            <input
+              type="text"
+              name="rent"
+              className={styles.textInput}
+              placeholder="Rent Price"
+            />
+          )}
           <button
             type="submit"
             className={styles.mainButton}
