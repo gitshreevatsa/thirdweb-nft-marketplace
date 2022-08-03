@@ -103,14 +103,14 @@
 .right {
   height: 100%;
   display: flex;
-  align-items:center;
+  align-items: center;
   justify-content: space-between;
   flex-direction: row;
   margin-right: 5%;
 }
 
-.createButton{
-  margin-right:10px;
+.createButton {
+  margin-right: 60%;
 }
 .secondaryButton {
   cursor: pointer;
@@ -145,6 +145,7 @@
   width: 180px;
   text-align: center;
   border-radius: 9999px;
+  margin-left: 10px;
 }
 
 .mainButton:hover {

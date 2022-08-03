@@ -3,6 +3,7 @@ import { useAddress, useSDK, useMetamask, useDisconnect } from "@thirdweb-dev/re
 import styles from "../styles/Home.module.css";
 import toast, { Toast, Toaster } from "react-hot-toast";
 
+
 function Collections() {
   const [collectionName, setCollectionName] = useState("");
   const[verified, setverified] = useState()

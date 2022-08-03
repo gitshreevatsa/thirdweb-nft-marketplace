@@ -18,11 +18,12 @@ export default function Header() {
           </Link>
         </div>
       </div>
+ 
       <div className={styles.right}>
-      <div className={styles.createButton}>
-        <a className={styles.mainButton} href="/collections">
+      <div className={styles.mainButton}>
+        <Link href="/collections">
           Create
-        </a>
+        </Link>
       </div>
         {address ? (
           <>
