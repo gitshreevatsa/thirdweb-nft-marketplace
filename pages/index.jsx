@@ -1,4 +1,3 @@
-import type { NextPage } from "next";
 import styles from "../styles/Home.module.css";
 import Link from "next/link";
 import {
@@ -10,7 +9,7 @@ import { useRouter } from "next/router";
 import Header from "../components/Header";
 
 
-const Home: NextPage = () => {
+const Home = () => {
   const router = useRouter();
 
   // Connect your marketplace smart contract here (replace this address)

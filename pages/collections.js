@@ -7,7 +7,7 @@ import {
 } from "@thirdweb-dev/react";
 import styles from "../styles/Home.module.css";
 import toast, { Toast, Toaster } from "react-hot-toast";
-import db from "./db";
+import db from "./db/db";
 import { collection, doc, query, setDoc, getDocs } from "firebase/firestore";
 
 function Collections() {
@@ -41,7 +41,6 @@ function Collections() {
     });
   }
 
-
   async function handleChange(e) {
     e.preventDefault();
     getData();
@@ -63,15 +62,22 @@ function Collections() {
       });
 
       contractAddress;
-      collectionAddress.push(contractAddress);
+      const n = collectionAddress.length;
+      console.log("**********", n);
+
       console.log(contractAddress);
-      const data = {
-        address,
-        collectionName: collectionAddress,
-        multiSigWallet: "",
-      };
-      setDoc(doc(db, "usersBeta", address), data);
-      console.log("-------", data);
+      console.log(collectionAddress);
+      if (contractAddress) {
+        collectionAddress.push(contractAddress);
+        console.log(collectionAddress)
+        const data = {
+          address,
+          collectionName: collectionAddress,
+          multiSigWallet: "",
+        };
+        setDoc(doc(db, "usersBeta", address), data);
+        console.log("-------", data);
+      }
     }
     //thirdweb integration ends
   }
