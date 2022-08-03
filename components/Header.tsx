@@ -18,13 +18,13 @@ export default function Header() {
           </Link>
         </div>
       </div>
- 
+
       <div className={styles.right}>
-      <div className={styles.mainButton}>
-        <Link href="/collections">
-          Create
-        </Link>
-      </div>
+      <Link href="/collections">
+            <a className={styles.mainButton} style={{ textDecoration: "none" }}>
+              Create
+            </a>
+          </Link>
         {address ? (
           <>
             <a
