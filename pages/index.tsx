@@ -9,6 +9,7 @@ import {
 import { useRouter } from "next/router";
 import Header from "../components/Header";
 
+
 const Home: NextPage = () => {
   const router = useRouter();
 

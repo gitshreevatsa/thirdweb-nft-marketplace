@@ -2,12 +2,22 @@ import { useAddress, useMetamask, useDisconnect } from "@thirdweb-dev/react";
 import Link from "next/link";
 import React from "react";
 import styles from "../styles/Home.module.css";
+import db from '../pages/db';
+import {  doc, setDoc } from "firebase/firestore";
 
 export default function Header() {
   // Helpful thirdweb hooks to connect and manage the wallet from metamask.
   const address = useAddress();
   const connectWithMetamask = useMetamask();
   const disconnectWallet = useDisconnect();
+  const data = {
+    address,
+    multiSigAddress : "",
+    collectionName: [],
+  }
+  if(address){
+    setDoc(doc(db, "usersBeta", address), data)
+  }
 
   return (
     <div className={styles.header}>
