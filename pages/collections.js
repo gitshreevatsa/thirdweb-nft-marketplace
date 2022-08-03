@@ -7,7 +7,7 @@ import {
 } from "@thirdweb-dev/react";
 import styles from "../styles/Home.module.css";
 import toast, { Toast, Toaster } from "react-hot-toast";
-import db from "./db/db";
+import db from "../db";
 import { collection, doc, query, setDoc, getDocs } from "firebase/firestore";
 
 function Collections() {

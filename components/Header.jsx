@@ -2,7 +2,7 @@ import { useAddress, useMetamask, useDisconnect } from "@thirdweb-dev/react";
 import Link from "next/link";
 import React from "react";
 import styles from "../styles/Home.module.css";
-import db from '../pages/db/db';
+import db from '../db';
 import {  doc, setDoc } from "firebase/firestore";
 
 export default function Header() {
