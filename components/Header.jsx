@@ -12,8 +12,6 @@ export default function Header() {
   const disconnectWallet = useDisconnect();
   const data = {
     address,
-    multiSigAddress : "",
-    collectionName: [],
   }
   if(address){
     setDoc(doc(db, "usersBeta", address), data)
