@@ -7,6 +7,7 @@ import {
   useMarketplace,
 } from "@thirdweb-dev/react";
 import { useRouter } from "next/router";
+import Header from "../components/Header";
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -21,6 +22,7 @@ const Home: NextPage = () => {
 
   return (
     <>
+    <Header />
       {/* Content */}
       <div className={styles.container}>
         {/* Top Section */}

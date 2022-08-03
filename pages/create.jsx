@@ -7,18 +7,25 @@ import { NATIVE_TOKEN_ADDRESS, TransactionResult } from "@thirdweb-dev/sdk";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import styles from "../styles/Home.module.css";
+import { useAddress, useMetamask, useDisconnect } from "@thirdweb-dev/react";
+import toast, { Toast, Toaster } from "react-hot-toast";
 
 const Create = () => {
   // Next JS Router hook to redirect to other pages
+  const address = useAddress();
+  const connectWithMetamask = useMetamask();
+  const disconnectWallet = useDisconnect();
   const router = useRouter();
   const networkMismatch = useNetworkMismatch();
   const [, switchNetwork] = useNetwork();
-  const [rentListing, setRentListing] = useState(false);
+  const [rentListing, setRentListing] = useState(true);
 
   // Connect to our marketplace contract via the useMarketplace hook
   const marketplace = useMarketplace(
     "0xF9079f7949A856eBd0b000223F0bdAb110196233" // Your marketplace contract address here
   );
+
+
 
   // This function gets called when the form is submitted.
   async function handleCreateListing(e) {
@@ -57,6 +64,8 @@ const Create = () => {
           price.value
         );
       }
+
+      //Renting algorithm
 
       // If the transaction succeeds, take the user back to the homepage to view their listing!
       if (transactionResult) {
@@ -105,17 +114,49 @@ const Create = () => {
   }
 
   return (
-    <form onSubmit={(e) => handleCreateListing(e)}>
-      <div className={styles.container}>
-        {/* Form Section */}
-        <div className={styles.collectionContainer}>
-          <h1 className={styles.ourCollection}>
-            Upload your NFT to the marketplace:
-          </h1>
+    <>
+      <div className={styles.header}>
+        <div className={styles.left}>
+          <div></div>
+        </div>
+        <div className={styles.right}>
+          {address ? (
+            <>
+              <a
+                className={styles.secondaryButton}
+                onClick={() => disconnectWallet()}
+              >
+                Disconnect Wallet
+              </a>
+              <p style={{ marginLeft: 8, marginRight: 8, color: "grey" }}>|</p>
+              <p>
+                {address.slice(0, 6).concat("...").concat(address.slice(-4))}
+              </p>
+            </>
+          ) : (
+            <a
+              className={styles.mainButton}
+              onClick={() => connectWithMetamask()}
+            >
+              Connect Wallet
+            </a>
+          )}
+        </div>
+      </div>
+      <div>
+        <Toaster position="bottom-left" reverseOrder={false} />
+      </div>
+      <form onSubmit={(e) => handleCreateListing(e)}>
+        <div className={styles.container}>
+          {/* Form Section */}
+          <div className={styles.collectionContainer}>
+            <h1 className={styles.ourCollection}>
+              Rent your NFT in the marketplace:
+            </h1>
 
-          {/* Toggle between direct listing and auction listing */}
-          <div className={styles.listingTypeContainer}>
-            <input
+            {/* Toggle between direct listing and auction listing */}
+            <div className={styles.listingTypeContainer}>
+              {/* <input
               type="radio"
               name="listingType"
               id="directListing"
@@ -142,8 +183,8 @@ const Create = () => {
             />
             <label htmlFor="auctionListing" className={styles.listingTypeLabel}>
               Auction Listing
-            </label>
-            <input
+            </label> */}
+              {/* <input
               type="radio"
               name="listingType"
               id="rentListing"
@@ -155,55 +196,68 @@ const Create = () => {
             />
             <label htmlFor="rentListing" className={styles.listingTypeLabel}>
               Rent{" "}
-            </label>
-          </div>
+            </label> */}
+            </div>
 
-          {/* NFT Contract Address Field */}
-          <input
-            type="text"
-            name="contractAddress"
-            className={styles.textInput}
-            placeholder="NFT Contract Address"
-          />
+            {/* NFT Contract Address Field */}
+            <input
+              type="text"
+              name="contractAddress"
+              className={styles.textInput}
+              placeholder="NFT Contract Address"
+            />
 
-          {/* NFT Token ID Field */}
-          <input
-            type="text"
-            name="tokenId"
-            className={styles.textInput}
-            placeholder="NFT Token ID"
-          />
+            {/* NFT Token ID Field */}
+            <input
+              type="text"
+              name="tokenId"
+              className={styles.textInput}
+              placeholder="NFT Token ID"
+            />
 
-          {/* Sale Price For Listing Field */}
-          {!rentListing &&
+            {/* Sale Price For Listing Field */}
+            {/* {!rentListing &&
           <input
             type="text"
             name="price"
             className={styles.textInput}
             placeholder="Sale Price"
           />
-}
+} */}
 
-          {/*Renting price*/}
+            {/*Renting price*/}
 
-          {rentListing && (
+            {rentListing && (
+              <input
+                type="number"
+                min="0"
+                name="rentPrice"
+                className={styles.textInput}
+                placeholder="Rent Price Per Day"
+              />
+            )}
+
             <input
-              type="text"
-              name="rent"
+              type="number"
+              min="0"
+              name="rentDuration"
               className={styles.textInput}
-              placeholder="Rent Price"
+              placeholder="Maximum Renting Time"
             />
-          )}
-          <button
-            type="submit"
-            className={styles.mainButton}
-            style={{ marginTop: 32, borderStyle: "none" }}
-          >
-            List NFT
-          </button>
+            <button
+              onClick={(e) => {if(!address){
+                toast.error("Connect Wallet")
+              }}}
+              type="submit"
+              className={styles.mainButton}
+              style={{ marginTop: 32, borderStyle: "none" }}
+            >
+              Rent NFT
+            </button>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </>
   );
 };
 

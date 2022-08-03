@@ -3,7 +3,6 @@ import type { AppProps } from "next/app";
 import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
 import "../styles/globals.css";
 import Head from "next/head";
-import Header from "../components/Header";
 
 // This is the chainId your dApp will work on.
 const activeChainId = ChainId.Rinkeby;
@@ -20,7 +19,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           content="NREFT, Marketplace, NFT Marketplace, NFT Auction , How To Make OpenSea, NFT Renting, RENT NFTs, Non COllateral NFT Renting"
         />
       </Head>
-      <Header />
+
       <Component {...pageProps} />
     </ThirdwebProvider>
   );

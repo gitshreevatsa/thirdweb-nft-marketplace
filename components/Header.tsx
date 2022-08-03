@@ -19,6 +19,11 @@ export default function Header() {
         </div>
       </div>
       <div className={styles.right}>
+      <div className={styles.createButton}>
+        <a className={styles.mainButton} href="/collections">
+          Create
+        </a>
+      </div>
         {address ? (
           <>
             <a

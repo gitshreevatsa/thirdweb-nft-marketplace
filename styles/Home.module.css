@@ -103,12 +103,15 @@
 .right {
   height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items:center;
+  justify-content: space-between;
   flex-direction: row;
   margin-right: 5%;
 }
 
+.createButton{
+  margin-right:10px;
+}
 .secondaryButton {
   cursor: pointer;
   text-align: center;
