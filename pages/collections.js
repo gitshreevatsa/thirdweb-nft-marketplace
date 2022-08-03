@@ -32,7 +32,6 @@ function Collections() {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, " => ", doc.data());
       if (doc.id == address) {
         const collectionArray = doc.data().collectionName;
         console.log("------------", collectionArray);
@@ -67,7 +66,7 @@ function Collections() {
 
       console.log(contractAddress);
       console.log(collectionAddress);
-      if (contractAddress) {
+      if (contractAddress.length > 0) {
         collectionAddress.push(contractAddress);
         console.log(collectionAddress)
         const data = {
