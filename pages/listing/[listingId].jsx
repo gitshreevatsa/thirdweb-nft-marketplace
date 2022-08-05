@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import styles from "../../styles/Home.module.css";
 import Web3 from "web3";
+
 const ListingPage = () => {
   // Next JS Router hook to redirect to other pages and to grab the query from the URL (listingId)
   const router = useRouter();
@@ -103,11 +104,10 @@ const ListingPage = () => {
         })
         .once("receipt", async function (receipt) {
          await marketplace?.buyoutListing(listingId, 1);
+
           //router push to  main page based on above Promise
           router.push('/')
         })
-
-
         .on("error", console.error);
     } catch (error) {
       console.error(error);

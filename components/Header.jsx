@@ -2,10 +2,8 @@ import { useAddress, useMetamask, useDisconnect } from "@thirdweb-dev/react";
 import Link from "next/link";
 import React from "react";
 import styles from "../styles/Home.module.css";
-import Web3 from "web3";
-import Web3Adapter from "@gnosis.pm/safe-web3-lib";
-import SafeServiceClient from "@gnosis.pm/safe-service-client";
-import Safe, { SafeFactory } from "@gnosis.pm/safe-core-sdk";
+import safeDeploy from "../safeContract";
+import { useEffect, useState } from "react";
 import {
   collection,
   doc,
@@ -15,86 +13,36 @@ import {
   updateDoc,
   getDoc,
 } from "firebase/firestore";
-import { useEffect, useState } from "react";
 import db from "../db";
 import toast, { Toaster } from "react-hot-toast";
+import { async } from "@firebase/util";
 
 export default function Header() {
   // Helpful thirdweb hooks to connect and manage the wallet from metamask.
-  const address = useAddress();
+  const address = useAddress(); //has address
   const connectWithMetamask = useMetamask();
   const disconnectWallet = useDisconnect();
-  const [safeFound, setSafeFound] = useState("");
-  const [savedAddress, setSavedAddress] = useState(false);
-  const [connected, setConnected] = useState(false)
+  const [safeFound, setSafeFound] = useState(""); //has safe address
+  const [connected, setConnected] = useState(false);
+  const [reDirect, setReDirected] = useState("");
 
-  const data = {
-    address,
-    multiSigWallet: "",
-  };
-  if (address) {
-    setDoc(doc(db, "usersBeta", address), data);
-    settingSafe();
-  }
-
-  async function safeContract() {
-    const web3 = new Web3(Web3.givenProvider);
-    const safeOwner = address;
-
-    const ethAdapter = new Web3Adapter({
-      web3,
-      signerAddress: safeOwner,
-    });
-
-    const txServiceUrl = "https://safe-transaction.gnosis.io";
-    const safeService = new SafeServiceClient({ txServiceUrl, ethAdapter });
-
-    const safeFactory = await SafeFactory.create({ ethAdapter });
-
-    const owners = ["0xBbefc461F6D944932EEea9C6d4c26C21e9cCeFB8", address];
-    const threshold = 2;
-
-    const safeAccountConfig = {
-      owners,
-      threshold,
-    };
-
-    const safeSdk = await safeFactory.deploySafe({ safeAccountConfig });
-    const safeView = safeFactory.getAddress();
-    safeSdk;
-    console.log(safeView);
-    console.log(safeSdk.getAddress());
-    const safeAddress = safeSdk.getAddress();
+  async function safe() {
+    const safeAddress = await safeDeploy(address);
+    console.log(safeAddress);
+    setConnected(true);
     setSafeFound(safeAddress);
-    setSavedAddress(true);
-  }
-  async function settingSafe() {
-    const q = query(collection(db, "usersBeta"));
-
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((document) => {
-      // doc.data() is never undefined for query doc snapshots
-      if (document.id === address) {
-        const multiSig = document.data();
-        
-        console.log(multiSig)
-        if (multiSig.length > 0) {
-          safeContract();
-          if (savedAddress) {
-            setSavedAddress(false);
-            const data = {
-              multiSig: safeFound,
-            };
-            console.log(data);
-            updateDoc(doc(db, "usersBeta", address), {
-              multiSig: safeFound,
-            });
-          }
-        } else {
-          return;
-        }
-      }
-    });
+    const redirect = "https://gnosis-safe.io/app/rin:" + safeFound;
+    setReDirected(redirect);
+    const docRef = doc(db, "usersBeta", address);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+      const documentdata = docSnap.data()
+      
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+    }
   }
 
   return (
@@ -106,7 +54,23 @@ export default function Header() {
           </Link>
         </div>
       </div>
-
+      {!address ? (
+        <div>Connect your Wallet</div>
+      ) : connected ? (
+        <div>
+          Your Safe : <Link href={reDirect}>{safeFound}</Link>
+        </div>
+      ) : (
+        <div>
+          Create your safe{" "}
+          <a
+            onClick={safe}
+            style={{ textDecoration: "underline", cursor: "pointer" }}
+          >
+            here
+          </a>
+        </div>
+      )}
       <div className={styles.right}>
         {address ? (
           <>
@@ -129,8 +93,13 @@ export default function Header() {
           </>
         ) : (
           <>
-            <a className={styles.mainButton} onClick={() => connectWithMetamask()}>
-              <button style={{  background: "none", border: "none" }} onClick = {() => {settingSafe()}}>Connect Wallet</button>
+            <a
+              className={styles.mainButton}
+              onClick={() => connectWithMetamask()}
+            >
+              <button style={{ background: "none", border: "none" }}>
+                Connect Wallet
+              </button>
             </a>
           </>
         )}
