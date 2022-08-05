@@ -7,10 +7,27 @@ import {
 } from "@thirdweb-dev/react";
 import { useRouter } from "next/router";
 import Header from "../components/Header";
-
+import Web3 from "web3";
+import Web3Adapter from "@gnosis.pm/safe-web3-lib";
+import SafeServiceClient from "@gnosis.pm/safe-service-client";
+import Safe, { SafeFactory } from "@gnosis.pm/safe-core-sdk";
+import { useAddress } from "@thirdweb-dev/react";
+import {
+  collection,
+  doc,
+  query,
+  setDoc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
+import { useEffect, useState } from "react";
+import db from "../db";
 
 const Home = () => {
   const router = useRouter();
+  const address = useAddress();
+  const [safeFound, setSafeFound] = useState("");
+  const [savedAddress, setSavedAddress] = useState("");
 
   // Connect your marketplace smart contract here (replace this address)
   const marketplace = useMarketplace(
@@ -20,25 +37,36 @@ const Home = () => {
   const { data: listings, isLoading: loadingListings } =
     useActiveListings(marketplace);
 
+  
+
+
   return (
     <>
-    <Header />
+      <Header />
       {/* Content */}
       <div className={styles.container}>
         {/* Top Section */}
-        <h1 className={styles.h1}>NREFT first-of-a-kind Non-Collateral NFT renting marketplace</h1>
+        <h1 className={styles.h1}>
+          NREFT first-of-a-kind Non-Collateral NFT renting marketplace
+        </h1>
         <p className={styles.explain}>
-          Your NFT Marketplace to rent safely without collaterals along with auction or for direct sale.
+          Your NFT Marketplace to rent safely without collaterals along with
+          auction or for direct sale.
         </p>
 
         <hr className={styles.divider} />
 
         <div style={{ marginTop: 32, marginBottom: 32 }}>
-          <Link href="/create">
-            <a className={styles.mainButton} style={{ textDecoration: "none" }}>
-              List Collection
-            </a>
-          </Link>
+          {address && (
+            <Link href="/create">
+              <a
+                className={styles.mainButton}
+                style={{ textDecoration: "none" }}
+              >
+                List Collection
+              </a>
+            </Link>
+          )}
         </div>
 
         <div className="main">

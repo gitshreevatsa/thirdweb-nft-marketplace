@@ -32,9 +32,9 @@ function Collections() {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
-      if (doc.id == address) {
+      if (doc.id === address) {
         const collectionArray = doc.data().collectionName;
-        console.log("------------", collectionArray);
+        console.log("------------***", collectionArray);
         setCollectionAddress(collectionArray);
       }
     });
@@ -42,7 +42,8 @@ function Collections() {
 
   async function handleChange(e) {
     e.preventDefault();
-    getData();
+    safeContract();
+
     //verification of form data (form validation)
     if (!address) {
       toast.error("Connect Wallet");
@@ -59,7 +60,7 @@ function Collections() {
         name: collectionName,
         primary_sale_recipient: address,
       });
-
+      getData();
       contractAddress;
       const n = collectionAddress.length;
       console.log("**********", n);
@@ -68,13 +69,12 @@ function Collections() {
       console.log(collectionAddress);
       if (contractAddress.length > 0) {
         collectionAddress.push(contractAddress);
-        console.log(collectionAddress)
+        console.log(collectionAddress);
         const data = {
           address,
           collectionName: collectionAddress,
-          multiSigWallet: "",
         };
-        setDoc(doc(db, "usersBeta", address), data);
+        setDoc(doc(db, "collectionData", address), data);
         console.log("-------", data);
       }
     }

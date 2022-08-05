@@ -15,6 +15,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/create.jsx", "pages/index.jsx", "components/Header.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/create.jsx", "safeContracts.js", "pages/index.jsx", "components/Header.jsx", "pages/listing/[listingId].jsx", "pages/listing/[listingId].jsx"],
   "exclude": ["node_modules"]
 }
