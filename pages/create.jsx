@@ -77,7 +77,7 @@ const Create = () => {
           TokenId
         };
         //Pushing to DB
-        const fieldName = NFTAddress + "||||" + TokenId
+        const fieldName = NFTAddress +  TokenId
         setDoc(doc(db, "CreateData", fieldName), createData);
         console.log("******", createData);
         router.push(`/`);

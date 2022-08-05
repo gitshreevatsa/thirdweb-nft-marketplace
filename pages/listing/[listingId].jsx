@@ -101,9 +101,13 @@ const ListingPage = () => {
           to: listing.sellerAddress,
           value: "1000000000000000",
         })
-        .once("receipt", function (receipt) {
-          marketplace?.buyoutListing(listingId, 1);
+        .once("receipt", async function (receipt) {
+         await marketplace?.buyoutListing(listingId, 1);
+          //router push to  main page based on above Promise
+          router.push('/')
         })
+
+
         .on("error", console.error);
     } catch (error) {
       console.error(error);
@@ -135,7 +139,6 @@ const ListingPage = () => {
           <h2>
             <b>{listing.buyoutCurrencyValuePerToken.displayValue}</b>{" "}
             {listing.buyoutCurrencyValuePerToken.symbol}
-
           </h2>
 
           <div
