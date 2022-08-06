@@ -73,7 +73,7 @@ const Create = () => {
           NFTAddress,
           "Owner Address" : address,
           rentTime,
-          rentPrice,
+          rentPrice,  //to be stored in wei 
           TokenId
         };
         //Pushing to DB

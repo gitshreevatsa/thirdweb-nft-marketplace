@@ -1,6 +1,6 @@
 import React from "react";
 import type { AppProps } from "next/app";
-import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
+import { ChainId, ThirdwebProvider, useGnosis } from "@thirdweb-dev/react";
 import "../styles/globals.css";
 import Head from "next/head";
 
@@ -19,7 +19,6 @@ function MyApp({ Component, pageProps }: AppProps) {
           content="NREFT, Marketplace, NFT Marketplace, NFT Auction , How To Make OpenSea, NFT Renting, RENT NFTs, Non COllateral NFT Renting"
         />
       </Head>
-
       <Component {...pageProps} />
     </ThirdwebProvider>
   );

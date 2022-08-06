@@ -4,26 +4,35 @@ import {
   useNetwork,
   useNetworkMismatch,
   useListing,
+  useAddress,
+  useConnect,
+  useGnosis,
 } from "@thirdweb-dev/react";
 import { ChainId, ListingType, NATIVE_TOKENS } from "@thirdweb-dev/sdk";
-import { useSDK } from "@thirdweb-dev/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import styles from "../../styles/Home.module.css";
 import Web3 from "web3";
+import { doc, getDoc } from "firebase/firestore";
+import db from "../../db";
+import { ethers } from "ethers";
 
 const ListingPage = () => {
   // Next JS Router hook to redirect to other pages and to grab the query from the URL (listingId)
   const router = useRouter();
-  const price = "0.0025";
-  const sdk = useSDK();
+  const [delivery, setDelivery] = useState("");
+  const [rentingPrice, setRentingPrice] = useState("");
+  const [rentTimeMax, setRentTimeMax] = useState("");
+  const [rentTaken, setRentTaken] = useState("");
+  const [rentShowing, setRentShowing] = useState("");
   const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
 
   // De-construct listingId out of the router.query.
   // This means that if the user visits /listing/0 then the listingId will be 0.
   // If the user visits /listing/1 then the listingId will be 1.
   const { listingId } = router.query;
-
+  // const connectwithGnosis = useGnosis();
+  const address = useAddress();
   // Hooks to detect user is on the right network and switch them if they are not
   const networkMismatch = useNetworkMismatch();
   const [, switchNetwork] = useNetwork();
@@ -43,7 +52,7 @@ const ListingPage = () => {
   // Store the bid amount the user entered into the bidding textbox
   const [bidAmount, setBidAmount] = useState("");
 
-  if (loadingListing) {
+  if (loadingListing && address !== undefined) {
     return <div className={styles.loadingOrError}>Loading...</div>;
   }
 
@@ -85,6 +94,42 @@ const ListingPage = () => {
     }
   }
 
+  async function dataFromDb() {
+    const usersBeta = await getDoc(doc(db, "usersBeta", address));
+    const createData = await getDoc(
+      doc(
+        db,
+        "CreateData",
+        listing.assetContractAddress.concat(listing.tokenId)
+      )
+    );
+    console.log(listing.tokenId);
+    const usersBetaJson = await usersBeta.data();
+    const deliveryAddress = await usersBetaJson.multiSigWallet;
+    setDelivery(deliveryAddress);
+    console.log(delivery);
+    const createDataJson = await createData.data();
+    const assetAddress = await createDataJson.NFTAddress;
+    console.log(assetAddress);
+    const rentSubmitted = await createDataJson.rentPrice;
+    console.log(rentSubmitted);
+    const rentTimeSubmitted = (await createDataJson.rentTime) - 1;
+    setRentTimeMax(rentTimeSubmitted);
+    console.log(rentTimeMax);
+    const rentInWei = ethers.utils.parseEther(rentSubmitted);
+    const price = rentInWei * rentTaken;
+    console.log(price);
+    setRentingPrice(price);
+    const showcase = rentSubmitted * rentTaken;
+    setRentShowing(showcase);
+  }
+  dataFromDb();
+
+  // 08042161729
+  //getDoc of both
+  //from usersbeta, store multiSig
+  //from createData , store rentPrice and Date Time and multiply them and store as price
+  //send multiSig to reciever address
   async function buyNft() {
     try {
       // Ensure user is on the correct network
@@ -92,26 +137,41 @@ const ListingPage = () => {
         switchNetwork && switchNetwork(4);
         return;
       }
+      // const newAddress = await connectwithGnosis({
+      //   safeAddress: delivery,
+      //   safeChainId: 4,
+      // });
+      // console.log("*****************************************", ( newAddress).data.account);
       console.log(listing.assetContractAddress);
       console.log(listing.sellerAddress);
+
       // Simple one-liner for buying the NFT
-
-      web3.eth
-        .sendTransaction({
-          from: "0x4f7608500C4FB6cDD160c0DEf1B69167fD2e4817",
-          to: listing.sellerAddress,
-          value: "1000000000000000",
-        })
-        .once("receipt", async function (receipt) {
-         await marketplace?.buyoutListing(listingId, 1);
-
-          //router push to  main page based on above Promise
-          router.push('/')
-        })
-        .on("error", console.error);
+      if (rentShowing > 0) {
+        alert(
+          "SDK beta we were using got closed, Its just the MVP! Stay tuned for explaination of this first of a kind mechanism :)"
+        );
+        
+        web3.eth
+          .sendTransaction({
+            from: address,
+            to: listing.sellerAddress,
+            value: rentingPrice,
+          })
+          .once("receipt", async function (receipt) {
+            console.log(receipt);
+            console.log(listingId);
+            await marketplace?.buyoutListing(listingId, 1, delivery);
+            //await setDoc from paper
+            //router push to  main page based on above Promise
+            router.push("/");
+          })
+          .on("error", console.error);
+      } else {
+        alert("Set Duration");
+      }
     } catch (error) {
       console.error(error);
-      alert(error);
+
     }
   }
 
@@ -138,7 +198,9 @@ const ListingPage = () => {
 
           <h2>
             <b>{listing.buyoutCurrencyValuePerToken.displayValue}</b>{" "}
-            {listing.buyoutCurrencyValuePerToken.symbol}
+            {listing.buyoutCurrencyValuePerToken.symbol} per Day
+            <br />
+            <b>Total : {rentShowing} </b>
           </h2>
 
           <div
@@ -166,31 +228,21 @@ const ListingPage = () => {
               }}
             >
               <input
-                type="text"
-                name="bidAmount"
-                className={styles.textInput}
-                onChange={(e) => setBidAmount(e.target.value)}
-                placeholder="Amount"
-                style={{ marginTop: 0, marginLeft: 0, width: 128 }}
-              />
-              <input
-                className={styles.textInput}
-                style={{ marginTop: 0, marginLeft: 0, width: 128 }}
-              />
-              {/* <button
-                className={styles.mainButton}
-                onClick={createBidOrOffer}
-                style={{
-                  borderStyle: "none",
-                  background: "transparent",
-                  width: "fit-content",
+                type="number"
+                min="10"
+                onChange={(e) => {
+                  setRentTaken(e.target.value);
                 }}
-              >
-                Make Offer
-              </button> */}
+                max={rentingPrice}
+                className={styles.textInput}
+                required
+                placeholder="Duration"
+                style={{ marginTop: 0, marginLeft: 0, width: 128 }}
+              />
             </div>
           </div>
         </div>
+        <p>DONOT CLICK RENT, go through guidelines.</p>
       </div>
     </div>
   );

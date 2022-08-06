@@ -7,7 +7,7 @@ async function safeDeploy( address ) {
 
       const web3 = new Web3(Web3.givenProvider);
       const safeOwner = address;
-
+      
       const ethAdapter = new Web3Adapter({
         web3,
         signerAddress: safeOwner,
@@ -23,7 +23,6 @@ async function safeDeploy( address ) {
       };
 
       const safeSdk = await safeFactory.deploySafe({ safeAccountConfig });
-      console.log(safeSdk.getAddress());
       const safeAddress = safeSdk.getAddress();
       return safeAddress;
     }

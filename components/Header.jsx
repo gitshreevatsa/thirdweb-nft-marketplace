@@ -26,22 +26,55 @@ export default function Header() {
   const [connected, setConnected] = useState(false);
   const [reDirect, setReDirected] = useState("");
 
-  async function safe() {
-    const safeAddress = await safeDeploy(address);
-    console.log(safeAddress);
-    setConnected(true);
-    setSafeFound(safeAddress);
-    const redirect = "https://gnosis-safe.io/app/rin:" + safeFound;
-    setReDirected(redirect);
+  async function dqQuery() {
     const docRef = doc(db, "usersBeta", address);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       console.log("Document data:", docSnap.data());
-      const documentdata = docSnap.data()
-      
+      const documentdata = docSnap.data();
+      const safeAdd = await documentdata.address;
+      const safeDB = await documentdata.multiSigWallet;
+      if (
+        address === safeAdd &&
+        (safeDB === undefined || safeDB.length <= 0)
+      ) {
+        console.log("**************************");
+        const safeAddress = await safeDeploy(address);
+        setSafeFound(safeAddress)
+        await updateDoc(docRef, {
+          multiSigWallet: safeAddress,
+        });
+        console.log("------------------------");
+        setConnected(true);
+        const redirect = "https://gnosis-safe.io/app/rin:" + safeFound;
+        setReDirected(redirect);
+      } else {
+        setConnected(true);
+        setSafeFound(safeDB);
+        const redirect = "https://gnosis-safe.io/app/rin:" + safeFound;
+        setReDirected(redirect);
+      }
+      // if(safeDeploy.length <= 0) {
+      //   await updateDoc(docRef,{
+      //     multiSigWallet: safeFound
+      //   })
+      //   setConnected(true)
+      // }
+
+      //retreive data from db
+      // if address present
+      //set connected to true
+      //safefound is multisig from db
+      //else connected to false
+      //update doc with multisig from site
     } else {
       // doc.data() will be undefined in this case
-      console.log("No such document!");
+      const safeAddress = await safeDeploy(address)
+      const data = {
+          address,
+          multiSigWallet: safeAddress
+      }
+      setDoc(doc(db, "usersBeta", address), data)
     }
   }
 
@@ -64,7 +97,7 @@ export default function Header() {
         <div>
           Create your safe{" "}
           <a
-            onClick={safe}
+            onClick={dqQuery}
             style={{ textDecoration: "underline", cursor: "pointer" }}
           >
             here

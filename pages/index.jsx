@@ -7,28 +7,14 @@ import {
 } from "@thirdweb-dev/react";
 import { useRouter } from "next/router";
 import Header from "../components/Header";
-import Web3 from "web3";
-import Web3Adapter from "@gnosis.pm/safe-web3-lib";
-import SafeServiceClient from "@gnosis.pm/safe-service-client";
-import Safe, { SafeFactory } from "@gnosis.pm/safe-core-sdk";
 import { useAddress } from "@thirdweb-dev/react";
-import {
-  collection,
-  doc,
-  query,
-  setDoc,
-  getDocs,
-  updateDoc,
-} from "firebase/firestore";
 import { useEffect, useState } from "react";
-import db from "../db";
 
 const Home = () => {
   const router = useRouter();
   const address = useAddress();
-  const [safeFound, setSafeFound] = useState("");
-  const [savedAddress, setSavedAddress] = useState("");
 
+  const guidelines = "https://periwinkle-thorium-69c.notion.site/NREFT-Onboarding-BETA-5732219a79b747058861dc3050aa9e64"
   // Connect your marketplace smart contract here (replace this address)
   const marketplace = useMarketplace(
     "0xF9079f7949A856eBd0b000223F0bdAb110196233" // Your marketplace contract address here
@@ -37,8 +23,16 @@ const Home = () => {
   const { data: listings, isLoading: loadingListings } =
     useActiveListings(marketplace);
 
-  
+    const sendThem = async() => {
+      if(address !== undefined){
+        alert("Connect Wallet")
+      }else{
 
+      }
+    }
+    // const gnosis = "0xE152ECA5688E8EF476F8248f0Bef825e97BFDa4a"
+    // console.log("***********************",gnosis.length)
+    // console.log("-----------------------",address.length)
 
   return (
     <>
@@ -53,9 +47,10 @@ const Home = () => {
           Your NFT Marketplace to rent safely without collaterals along with
           auction or for direct sale.
         </p>
+        <p>Please go through <Link href={guidelines}>guidelines</Link> before interacting :)</p>
 
         <hr className={styles.divider} />
-
+        <p></p>
         <div style={{ marginTop: 32, marginBottom: 32 }}>
           {address && (
             <Link href="/create">
@@ -77,11 +72,12 @@ const Home = () => {
             ) : (
               // Otherwise, show the listings
               <div className={styles.listingGrid}>
+
                 {listings?.map((listing) => (
                   <div
                     key={listing.id}
                     className={styles.listingShortView}
-                    onClick={() => router.push(`/listing/${listing.id}`)}
+                    onClick={() =>  router.push(`/listing/${listing.id}`)}
                   >
                     <MediaRenderer
                       src={listing.asset.image}
