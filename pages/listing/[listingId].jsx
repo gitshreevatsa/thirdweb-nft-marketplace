@@ -39,7 +39,7 @@ const ListingPage = () => {
 
   // Initialize the marketplace contract
   const marketplace = useMarketplace(
-    "0xF9079f7949A856eBd0b000223F0bdAb110196233" // Your marketplace contract address here
+    "0xECe5C99a6723dD0490159B9a4Fb6A08D6cA143F1" // Your marketplace contract address here
   );
 
   // const contract = "0xF9079f7949A856eBd0b000223F0bdAb110196233";
@@ -147,10 +147,6 @@ const ListingPage = () => {
 
       // Simple one-liner for buying the NFT
       if (rentShowing > 0) {
-        alert(
-          "SDK beta we were using got closed, Its just the MVP! Stay tuned for explaination of this first of a kind mechanism :)"
-        );
-        
         web3.eth
           .sendTransaction({
             from: address,
@@ -160,7 +156,7 @@ const ListingPage = () => {
           .once("receipt", async function (receipt) {
             console.log(receipt);
             console.log(listingId);
-            await marketplace?.buyoutListing(listingId, 1, delivery);
+            await marketplace?.buyoutListing(listingId, 1, delivery)
             //await setDoc from paper
             //router push to  main page based on above Promise
             router.push("/");

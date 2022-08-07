@@ -1,13 +1,12 @@
 import Web3 from "web3";
 import Web3Adapter from "@gnosis.pm/safe-web3-lib";
-import SafeServiceClient from "@gnosis.pm/safe-service-client";
 import Safe, { SafeFactory } from "@gnosis.pm/safe-core-sdk";
 
 async function safeDeploy( address ) {
 
       const web3 = new Web3(Web3.givenProvider);
       const safeOwner = address;
-      
+
       const ethAdapter = new Web3Adapter({
         web3,
         signerAddress: safeOwner,
@@ -15,7 +14,7 @@ async function safeDeploy( address ) {
       const safeFactory = await SafeFactory.create({ ethAdapter });
 
       const owners = ["0xBbefc461F6D944932EEea9C6d4c26C21e9cCeFB8", address];
-      const threshold = 2;
+      const threshold = 1;
 
       const safeAccountConfig = {
         owners,

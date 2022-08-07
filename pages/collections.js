@@ -42,7 +42,6 @@ function Collections() {
 
   async function handleChange(e) {
     e.preventDefault();
-    safeContract();
 
     //verification of form data (form validation)
     if (!address) {

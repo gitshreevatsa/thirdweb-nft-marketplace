@@ -26,7 +26,7 @@ const Create = () => {
   const [TokenId, setTokenId] = useState("")
   // Connect to our marketplace contract via the useMarketplace hook
   const marketplace = useMarketplace(
-    "0xF9079f7949A856eBd0b000223F0bdAb110196233" // Your marketplace contract address here
+    "0xECe5C99a6723dD0490159B9a4Fb6A08D6cA143F1" // Your marketplace contract address here
   );
 
   // if(address){
@@ -73,7 +73,7 @@ const Create = () => {
           NFTAddress,
           "Owner Address" : address,
           rentTime,
-          rentPrice,  //to be stored in wei 
+          rentPrice,  //to be stored in wei
           TokenId
         };
         //Pushing to DB
