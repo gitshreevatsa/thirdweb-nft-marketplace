@@ -39,7 +39,7 @@ const ListingPage = () => {
 
   // Initialize the marketplace contract
   const marketplace = useMarketplace(
-    "0xECe5C99a6723dD0490159B9a4Fb6A08D6cA143F1" // Your marketplace contract address here
+    "0xF1A004Bb5298E95e599CC0dc634bE2B1ec556a40" // Your marketplace contract address here
   );
 
   // const contract = "0xF9079f7949A856eBd0b000223F0bdAb110196233";
@@ -134,7 +134,7 @@ const ListingPage = () => {
     try {
       // Ensure user is on the correct network
       if (networkMismatch) {
-        switchNetwork && switchNetwork(4);
+        switchNetwork && switchNetwork(5);
         return;
       }
       // const newAddress = await connectwithGnosis({

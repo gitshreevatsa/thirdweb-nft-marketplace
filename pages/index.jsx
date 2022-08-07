@@ -17,7 +17,7 @@ const Home = () => {
   const guidelines = "https://periwinkle-thorium-69c.notion.site/NREFT-Onboarding-BETA-5732219a79b747058861dc3050aa9e64"
   // Connect your marketplace smart contract here (replace this address)
   const marketplace = useMarketplace(
-    "0xECe5C99a6723dD0490159B9a4Fb6A08D6cA143F1" // Your marketplace contract address here
+    "0xF1A004Bb5298E95e599CC0dc634bE2B1ec556a40" // Your marketplace contract address here
   );
 
   const { data: listings, isLoading: loadingListings } =

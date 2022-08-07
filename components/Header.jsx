@@ -46,12 +46,12 @@ export default function Header() {
         });
         console.log("------------------------");
         setConnected(true);
-        const redirect = "https://gnosis-safe.io/app/rin:" + safeFound;
+        const redirect = "https://gnosis-safe.io/app/gor:" + safeFound;
         setReDirected(redirect);
       } else {
         setConnected(true);
         setSafeFound(safeDB);
-        const redirect = "https://gnosis-safe.io/app/rin:" + safeFound;
+        const redirect = "https://gnosis-safe.io/app/gor:" + safeFound;
         setReDirected(redirect);
       }
       // if(safeDeploy.length <= 0) {
@@ -91,7 +91,7 @@ export default function Header() {
         <div>Connect your Wallet</div>
       ) : connected ? (
         <div>
-          Your Safe : <Link href={reDirect}>{safeFound}</Link>
+          Your Safe : <Link href={reDirect} target="_blank">{safeFound}</Link>
         </div>
       ) : (
         <div>
