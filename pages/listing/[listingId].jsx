@@ -131,6 +131,7 @@ const ListingPage = () => {
   //from createData , store rentPrice and Date Time and multiply them and store as price
   //send multiSig to reciever address
   async function buyNft() {
+
     try {
       // Ensure user is on the correct network
       if (networkMismatch) {
@@ -147,21 +148,22 @@ const ListingPage = () => {
 
       // Simple one-liner for buying the NFT
       if (rentShowing > 0) {
-        web3.eth
-          .sendTransaction({
-            from: address,
-            to: listing.sellerAddress,
-            value: rentingPrice,
-          })
-          .once("receipt", async function (receipt) {
-            console.log(receipt);
-            console.log(listingId);
-            await marketplace?.buyoutListing(listingId, 1, delivery)
-            //await setDoc from paper
-            //router push to  main page based on above Promise
-            router.push("/");
-          })
-          .on("error", console.error);
+        console.log(listingId);
+        await marketplace?.buyoutListing(listingId, 1, delivery)
+        //await setDoc from paper
+        //router push to  main page based on above Promise
+        router.push("/");
+        // web3.eth
+        //   .sendTransaction({
+        //     from: address,
+        //     to: listing.sellerAddress,
+        //     value: rentingPrice,
+        //   })
+        //   .once("receipt", async function (receipt) {
+        //     console.log(receipt);
+
+        //   })
+        //   .on("error", console.error);
       } else {
         alert("Set Duration");
       }
@@ -238,7 +240,7 @@ const ListingPage = () => {
             </div>
           </div>
         </div>
-        <p>DONOT CLICK RENT, go through guidelines.</p>
+      
       </div>
     </div>
   );
