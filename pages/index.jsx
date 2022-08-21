@@ -47,8 +47,6 @@ const Home = () => {
           Your NFT Marketplace to rent safely without collaterals along with
           auction or for direct sale.
         </p>
-        <p>Please go through <Link href={guidelines}>guidelines</Link> before interacting :)</p>
-
         <hr className={styles.divider} />
         <p></p>
         <div style={{ marginTop: 32, marginBottom: 32 }}>
