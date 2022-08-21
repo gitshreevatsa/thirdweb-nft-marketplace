@@ -23,7 +23,7 @@ async function safeDeploy(address: string) {
     contractNetworks,
     isL1SafeMasterCopy: false,
   });
-  const owners = ["0xBbefc461F6D944932EEea9C6d4c26C21e9cCeFB8"];
+  const owners = ["0xBbefc461F6D944932EEea9C6d4c26C21e9cCeFB8", address];
   const threshold = 1;
   const safeAccountConfig = {
     owners,
