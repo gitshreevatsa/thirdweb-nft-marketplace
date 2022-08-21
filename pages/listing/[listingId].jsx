@@ -149,20 +149,21 @@ const ListingPage = () => {
       // Simple one-liner for buying the NFT
       if (rentShowing > 0) {
         console.log(listingId);
+        await web3.eth
+        .sendTransaction({
+          from: address,
+          to: listing.sellerAddress,
+          value: rentingPrice,
+        })
+        .once("receipt", async function (receipt) {
+          console.log(receipt);
+
+        })
         await marketplace?.buyoutListing(listingId, 1, delivery)
         //await setDoc from paper
         //router push to  main page based on above Promise
         router.push("/");
-        // web3.eth
-        //   .sendTransaction({
-        //     from: address,
-        //     to: listing.sellerAddress,
-        //     value: rentingPrice,
-        //   })
-        //   .once("receipt", async function (receipt) {
-        //     console.log(receipt);
 
-        //   })
         //   .on("error", console.error);
       } else {
         alert("Set Duration");
@@ -240,7 +241,7 @@ const ListingPage = () => {
             </div>
           </div>
         </div>
-      
+
       </div>
     </div>
   );
